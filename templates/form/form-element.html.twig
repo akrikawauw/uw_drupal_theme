@@ -44,7 +44,7 @@
  * @see template_preprocess_form_element()
  */
 #}
-{#{{ kint(type) }}#}
+{#{{ kint(customtype) }}#}
 {%
   set label_attributes = label_attributes ? label_attributes : create_attribute()
 %}
@@ -58,7 +58,7 @@
     {% set labelclass = "custom-control-label" %}
     {% set inputclass = "custom-control-input" %}
   {% else %}
-    {% set wrapperclass = "form-check" %}
+    {% set wrapperclass = "form-check form-group" %}
     {% set labelclass = "form-check-label" %}
     {% set inputclass = "form-check-input" %}
   {% endif %}
@@ -76,12 +76,23 @@
   {% endif %}
 {% endif %}
 
+{%  if type == 'managed_file' %}
+  {% if customtype == 'custom' %}
+    {% set wrapperclass = 'custom-file form-group' %}
+    {% set labelclass = 'custom-file-label' %}
+    {% set inputclass = 'custom-file-input' %}
+  {% else %}
+    {% set wrapperclass = 'form-group' %}
+    {% set labelclass = '' %}
+    {% set inputclass = 'form-control-file' %}
+  {% endif %}
+{% endif %}
 {%
   set classes = [
     'js-form-item',
     'js-form-type-' ~ type|clean_class,
     type in ['checkbox', 'radio'] ? type|clean_class : 'form-type-' ~ type|clean_class,
-    type in ['checkbox', 'radio'] ? wrapperclass : 'form-group',
+    type in ['checkbox', 'radio', 'managed_file'] ? wrapperclass : 'form-group',
     type in ['input'] ? 'form-control',
     'form-item-' ~ name|clean_class,
     'js-form-item-' ~ name|clean_class,
@@ -134,6 +145,30 @@
       </div>
     {% endif %}
   </div>
+{% elseif (type == 'managed_file') %}
+  {% if (customtype == 'custom') %}
+  {# We need some extra stuff here. #}
+  <div{{ attributes.addClass(classes) }}>
+  {#  {{ children }}#}
+    <input{{ input_attributes.addClass(inputclass).setAttribute('lang', 'en').setAttribute('type', 'file') }}>
+    <label {{ label_attributes.addClass(labelclass).setAttribute('for', input_attributes.id) }}>
+      {{ input_title|raw }}
+    </label>
+    <small{{ description.attributes.addClass(description_classes) }}>
+      {{ description.content }}
+    </small>
+  </div>
+  {% else %}
+  <div{{ attributes.addClass(classes) }}>
+    <label {{ label_attributes.addClass(labelclass).setAttribute('for', input_attributes.id) }}>
+      {{ input_title|raw }}
+    </label>
+    <input{{ input_attributes.addClass(inputclass).setAttribute('lang', 'en').setAttribute('type', 'file') }}>
+    <small{{ description.attributes.addClass(description_classes) }}>
+      {{ description.content }}
+    </small>
+  </div>
+  {% endif %}
 {% else %}
   <fieldset{{ attributes.addClass(classes, 'form-group') }}>
     {% if label_display in ['before', 'invisible'] %}

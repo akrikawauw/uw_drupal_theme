@@ -39,3 +39,7 @@ input_file: 'custom'
 # Container related.
 # ---------------------------
 fluid_container: 1
+
+# Image related.
+# ---------------------------
+image_fluid: 0

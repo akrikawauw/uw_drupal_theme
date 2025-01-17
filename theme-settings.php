@@ -436,16 +436,34 @@ function uw_drupal_theme_form_system_theme_settings_alter(&$form, FormStateInter
   ];
 
   // Form settings.
-  $form['uw_drupal_theme_form'] = [
+  $form['uw_drupal_theme_bootstrap'] = [
     '#type' => 'details',
-    '#title' => t('Form settings'),
+    '#title' => t('Bootstrap settings'),
     '#group' => 'uw_drupal_theme',
   ];
-  $form['uw_drupal_theme_form']['settings'] = [
+  $form['uw_drupal_theme_bootstrap']['settings'] = [
     '#type' => 'fieldset',
-    '#title' => t('Default bootstrap form settings'),
+    '#title' => t('Bootstrap related settings'),
   ];
-  $form['uw_drupal_theme_form']['settings']['input_radio'] = [
+  $form['uw_drupal_theme_bootstrap']['settings']['images'] = [
+    '#type' => 'details',
+    '#title' => t('Images'),
+    '#collapsible' => 'TRUE',
+    '#collapsed' => TRUE,
+  ];
+  $form['uw_drupal_theme_bootstrap']['settings']['images']['image_fluid'] = [
+    '#type' => 'checkbox',
+    '#title' => t('Apply .img-fluid class to all content images'),
+    '#default_value' => theme_get_setting('image_fluid'),
+    '#description' => t('Adds a .img-fluid class to all images.'),
+  ];
+  $form['uw_drupal_theme_bootstrap']['settings']['form_fields'] = [
+    '#type' => 'details',
+    '#title' => t('Form fields'),
+    '#collapsible' => 'TRUE',
+    '#collapsed' => TRUE,
+  ];
+  $form['uw_drupal_theme_bootstrap']['settings']['form_fields']['input_radio'] = [
     '#type' => 'select',
     '#title' => t('Radio buttons'),
     '#default_value' => theme_get_setting('input_radio'),
@@ -454,7 +472,7 @@ function uw_drupal_theme_form_system_theme_settings_alter(&$form, FormStateInter
       'custom' => t('Custom'),
     ],
   ];
-  $form['uw_drupal_theme_form']['settings']['input_checkbox'] = [
+  $form['uw_drupal_theme_bootstrap']['settings']['form_fields']['input_checkbox'] = [
     '#type' => 'select',
     '#title' => t('Checkboxes'),
     '#default_value' => theme_get_setting('input_checkbox'),
@@ -464,7 +482,7 @@ function uw_drupal_theme_form_system_theme_settings_alter(&$form, FormStateInter
       'switch' => t('Switch'),
     ],
   ];
-  $form['uw_drupal_theme_form']['settings']['input_select'] = [
+  $form['uw_drupal_theme_bootstrap']['settings']['form_fields']['input_select'] = [
     '#type' => 'select',
     '#title' => t('Select menus'),
     '#default_value' => theme_get_setting('input_select'),
@@ -473,7 +491,7 @@ function uw_drupal_theme_form_system_theme_settings_alter(&$form, FormStateInter
       'custom' => t('Custom'),
     ],
   ];
-  $form['uw_drupal_theme_form']['settings']['input_file'] = [
+  $form['uw_drupal_theme_bootstrap']['settings']['form_fields']['input_file'] = [
     '#type' => 'select',
     '#title' => t('File uploads'),
     '#default_value' => theme_get_setting('input_file'),
@@ -481,6 +499,35 @@ function uw_drupal_theme_form_system_theme_settings_alter(&$form, FormStateInter
       'standard' => t('Standard'),
       'custom' => t('Custom'),
     ],
+  ];
+  $form['uw_drupal_theme_bootstrap']['settings']['buttons'] = [
+    '#type' => 'details',
+    '#title' => t('Buttons'),
+    '#collapsible' => 'TRUE',
+    '#collapsed' => TRUE,
+  ];
+  $form['uw_drupal_theme_bootstrap']['settings']['buttons']['convert_input_to_submit'] = [
+    '#type' => 'checkbox',
+    '#title' => t('Convert input type="submit" element to button element'),
+    '#default_value' => theme_get_setting('convert_input_to_submit'),
+  ];
+  $form['uw_drupal_theme_bootstrap']['settings']['buttons']['button_size'] = [
+    '#type' => 'select',
+    '#title' => t('Default button size'),
+    '#default_value' => theme_get_setting('button_size'),
+    '#empty_option' => t('Normal'),
+    '#options' => [
+      'btn-sm' => t('Small'),
+      'btn-lg' => t('Large'),
+    ],
+  ];
+  $form['uw_drupal_theme_bootstrap']['settings']['buttons']['button_outline'] = [
+    '#type' => 'checkbox',
+    '#title' => t('Button with outline format'),
+    '#default_value' => theme_get_setting('button_outline'),
+    '#description' => t('Use <code>.btn-default-outline</code> class. See @bootstrap_outline_buttons_link.', [
+      '@bootstrap_outline_buttons_link' => Link::fromTextAndUrl('Outline buttons in the Bootstrap 4 documentation', Url::fromUri('https://getbootstrap.com/docs/4.6/components/buttons/', ['absolute' => TRUE, 'fragment' => 'outline-buttons']))->toString(),
+    ]),
   ];
 
   // Login url settings.

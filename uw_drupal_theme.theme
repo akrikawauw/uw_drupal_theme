@@ -7,6 +7,8 @@
 
 use Drupal\Core\Template\Attribute;
 use Drupal\file\Entity\File;
+use Drupal\Component\Utility\Xss;
+use Drupal\Component\Render\MarkupInterface;
 
 /**
  * UW colors.
@@ -192,7 +194,7 @@ function uw_drupal_theme_preprocess_page(array &$variables): void {
 }
 
 /**
- * Implements hook_theme_suggestions
+ * Implements hook_theme_suggestions_HOOK_alter() for Blocks.
  */
 function uw_drupal_theme_theme_suggestions_block_alter(array &$suggestions, array $variables) {
   if (!empty($variables['elements']['#id'])) {
@@ -200,6 +202,17 @@ function uw_drupal_theme_theme_suggestions_block_alter(array &$suggestions, arra
     /** @var \Drupal\block\BlockInterface $block */
     $block = \Drupal::entityTypeManager()->getStorage('block')->load($variables['elements']['#id']);
     $suggestions[] = 'block__' . $variables['elements']['#base_plugin_id'] . '__' . $variables['elements']['#derivative_plugin_id'] . '__' . $block->getRegion();
+  }
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK_alter() for form inputs.
+ */
+function uw_drupal_theme_theme_suggestions_input_alter(array &$suggestions, array $variables) {
+  // If this is an input with type=[submit] and the theme setting to convert
+  // inputs to submit is true, then add this template suggestion.
+  if ($variables['element']['#type'] == 'submit' && theme_get_setting('convert_input_to_submit')) {
+    $suggestions[] = 'input__submit_button';
   }
 }
 
@@ -252,7 +265,7 @@ function uw_drupal_theme_preprocess_block(array &$variables): void {
  */
 function uw_drupal_theme_preprocess_form_element(&$variables): void {
   if (isset($variables['label']['#title'])) {
-    if (is_object($variables['label']['#title']) && !$variables['label']['#title'] instanceof MarkupInterface) {
+    if ((!$variables['label']['#title'] instanceof MarkupInterface) && is_object($variables['label']['#title'])) {
       $variables['input_title'] = NULL;
     }
     elseif (is_object($variables['label']['#title'])) {
@@ -272,6 +285,10 @@ function uw_drupal_theme_preprocess_form_element(&$variables): void {
         break;
       case 'radio':
         $variables['customtype'] = theme_get_setting('input_radio');
+        break;
+      case 'managed_file':
+        $variables['customtype'] = theme_get_setting('input_file');
+        $variables['input_attributes'] = new Attribute($variables['element']['#attributes']);
         break;
       default:
         break;
@@ -299,10 +316,92 @@ function uw_drupal_theme_preprocess_select(&$variables): void {
 }
 
 /**
- * Implements hook_preprocess_HOOK() for file-managed-file.html.twig.
+ * Implements hook_preprocess_HOOK() for form-element-label.html.twig.
  */
-function uw_drupal_theme_preprocess_file_managed_file(&$variables): void {
-  $variables['customtype'] = theme_get_setting('input_file');
+function uw_drupal_theme_preprocess_form_element_label(&$variables) {
+  $element = $variables['element'];
+}
+
+/**
+ * Implements hook_preprocess_input() for adding classes to inputs.
+ */
+function uw_drupal_theme_preprocess_input(&$variables): void {
+  if (isset($variables['attributes']['class'])) {
+    if (is_object(value: $variables['attributes']['class'])) {
+      if (in_array('error', $variables['attributes']['class']->value())) {
+        $variables['attributes']['class']->addClass('is-invalid');
+      }
+    }
+    elseif (is_array($variables['attributes']['class'])) {
+      if (in_array('error', $variables['attributes']['class'])) {
+        $variables['attributes']['class'][] = 'is-invalid';
+      }
+    }
+  }
+  if ($variables['element']['#type'] == 'submit') {
+    $button_size = theme_get_setting('button_size');
+    $button_types = [
+      'btn-primary',
+      'btn-secondary',
+      'btn-success',
+      'btn-warning',
+      'btn-danger',
+      'btn-link',
+    ];
+    $button_sizes = ['btn-sm', 'btn-lg'];
+    $button_is_outline = theme_get_setting('button_outline');
+    if (is_object($variables['attributes']['class'])) {
+      \Drupal::logger('uw_drupal_theme')->notice(implode($variables['attributes']['class']->value()));
+      if (!in_array('btn', $variables['attributes']['class']->value())) {
+        $variables['attributes']['class']->addClass('btn');
+      }
+      if (empty(array_intersect($button_types, $variables['attributes']['class']->value()))) {
+        if ($button_is_outline) {
+          $variables['attributes']['class']->addClass('btn-outline-primary');
+        }
+        else {
+          $variables['attributes']['class']->addClass('btn-primary');
+        }
+      }
+      if ($button_size && empty(array_intersect($button_sizes, $variables['attributes']['class']->value()))) {
+        $variables['attributes']['class']->addClass($button_size);
+      }
+    }
+    else {
+      if (!in_array('btn', $variables['attributes']['class'])) {
+        $variables['attributes']['class'][] = 'btn';
+      }
+      if (empty(array_intersect($button_types, $variables['attributes']['class']))) {
+        if ($button_is_outline) {
+          $variables['attributes']['class'][] = 'btn-outline-primary';
+        }
+        else {
+          $variables['attributes']['class'][] = 'btn-primary';
+        }
+      }
+      if ($button_size && empty(array_intersect($button_sizes, $variables['attributes']['class']))) {
+        $variables['attributes']['class'][] = $button_size;
+      }
+      $variables['attributes'] = new Attribute($variables['attributes']);
+    }
+    $variables['safe_value_label'] = Xss::filter($variables['attributes']['value']);
+  }
+}
+
+/**
+ * Implements template_preprocess_image().
+ */
+function uw_drupal_theme_preprocess_image(array &$variables): void {
+  // Check theme setting to see if we should add responsive class to image.
+  if (theme_get_setting('image_fluid')) {
+    // The class we want to add.
+    $img_class = 'img-fluid';
+    if (isset($variables['attributes']['class'])) {
+      $variables['attributes']['class'][] = $img_class;
+    } else {
+      $variables['attributes']['class'] = $img_class;
+    }
+  }
 }
 
 /**

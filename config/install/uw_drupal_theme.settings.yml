@@ -35,8 +35,14 @@ input_radio: 'custom'
 input_checkbox: 'switch'
 input_select: 'custom'
 input_file: 'custom'
+convert_input_to_submit: 1
+button_size: ''
+button_outline: 0
 
 # Container related.
 # ---------------------------
 fluid_container: 1
 
+# Image related.
+# ---------------------------
+image_fluid: 0

@@ -1,0 +1,31 @@
+# This is so your IDE knows about the syntax for fixes and autocomplete.
+$schema: https://git.drupalcode.org/project/drupal/-/raw/10.1.x/core/modules/sdc/src/metadata.schema.json
+enforce_prop_schemas: true
+name: Button
+status: experimental
+props:
+  type: object
+  properties:
+    style:
+      title: Button style
+      type: string
+      description: "The style of button."
+      enum: ['arrow', 'primary', 'secondary', 'play', 'plus', 'icon']
+    link:
+      title: Link Url
+      type: string
+    text:
+      title: Link text
+      type: string
+    color:
+      title: Button color
+      type: string
+      description: "Background color to use for the button."
+      # The enum directive restricts the possible values in the element to our list.
+      enum: ['purple', 'white', 'gold', 'light-gold']
+    size:
+      title: Button size
+      type: string
+      enum: ['large', 'small']
+
+# [uw_button style="arrow" size="large" color="purple" target="#"]Button text[/uw_button]
