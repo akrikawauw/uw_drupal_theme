@@ -1,0 +1,58 @@
+git st
+FILE: /home/sites/drupal10/web/themes/custom/uw_drupal_theme/node_modules/bootstrap/dist/css/bootstrap-grid.min.css
+-------------------------------------------------------------------------------------------------------------------
+FOUND 0 ERRORS AND 1 WARNING AFFECTING 1 LINE
+-------------------------------------------------------------------------------------------------------------------
+ 1 | WARNING | File appears to be minified and cannot be processed
+-------------------------------------------------------------------------------------------------------------------
+
+
+FILE: /home/sites/drupal10/web/themes/custom/uw_drupal_theme/node_modules/bootstrap/dist/css/bootstrap.min.css
+--------------------------------------------------------------------------------------------------------------
+FOUND 0 ERRORS AND 1 WARNING AFFECTING 1 LINE
+--------------------------------------------------------------------------------------------------------------
+ 1 | WARNING | File appears to be minified and cannot be processed
+--------------------------------------------------------------------------------------------------------------
+
+
+FILE: /home/sites/drupal10/web/themes/custom/uw_drupal_theme/node_modules/bootstrap/dist/css/bootstrap-reboot.min.css
+---------------------------------------------------------------------------------------------------------------------
+FOUND 0 ERRORS AND 1 WARNING AFFECTING 1 LINE
+---------------------------------------------------------------------------------------------------------------------
+ 1 | WARNING | File appears to be minified and cannot be processed
+---------------------------------------------------------------------------------------------------------------------
+
+
+FILE: /home/sites/drupal10/web/themes/custom/uw_drupal_theme/src/wp-theme/css/bootstrap.css
+-------------------------------------------------------------------------------------------
+FOUND 0 ERRORS AND 1 WARNING AFFECTING 1 LINE
+-------------------------------------------------------------------------------------------
+ 1 | WARNING | File appears to be minified and cannot be processed
+-------------------------------------------------------------------------------------------
+
+
+FILE: /home/sites/drupal10/web/themes/custom/uw_drupal_theme/src/wp-theme/css/style.css
+---------------------------------------------------------------------------------------
+FOUND 0 ERRORS AND 1 WARNING AFFECTING 1 LINE
+---------------------------------------------------------------------------------------
+ 1 | WARNING | File appears to be minified and cannot be processed
+---------------------------------------------------------------------------------------
+
+
+FILE: /home/sites/drupal10/web/themes/custom/uw_drupal_theme/uw_drupal_theme.post_update.php
+--------------------------------------------------------------------------------------------
+FOUND 0 ERRORS AND 1 WARNING AFFECTING 1 LINE
+--------------------------------------------------------------------------------------------
+ 96 | WARNING | There must be no blank line following an inline comment
+--------------------------------------------------------------------------------------------
+
+
+FILE: /home/sites/drupal10/web/themes/custom/uw_drupal_theme/uw_drupal_theme.theme
+----------------------------------------------------------------------------------
+FOUND 0 ERRORS AND 1 WARNING AFFECTING 1 LINE
+----------------------------------------------------------------------------------
+ 14 | WARNING | Class name must be prefixed with the project name "UwDrupalTheme"
+----------------------------------------------------------------------------------
+
+Time: 43.2 secs; Memory: 658.21MB
+
