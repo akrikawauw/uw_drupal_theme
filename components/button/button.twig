@@ -1,20 +1,21 @@
-{# TODO: do logic with style #}
+{# Set link classes based on values for size, style, color. #}
 {%
   set link_classes = [
   'btn',
   size == 'large' ? 'btn-lg' : 'btn-sm',
   style is not empty ? style,
   style not in ['primary', 'secondary'] ? 'arrow',
+  style in ['plus', 'play'] ? 'icon-link',
   color is not empty ? color : 'purple'
 ]
 %}
+{#  Set arrow classes based on style #}
 {% set arrow_box_classes = [
   style == 'arrow' ? 'arrow' : '',
   style == 'plus' ? 'icon ic-plus' : '',
   style == 'play' ? 'icon ic-play' : ''
 ]
 %}
-{# {% set classes = 'btn btn-lg arrow purple' %} #}
 
 <a{{create_attribute({'href':link}).addClass(link_classes)}}>
   <span>

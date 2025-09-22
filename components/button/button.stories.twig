@@ -1,0 +1,38 @@
+{% stories button with {
+  title: 'UW Drupal Theme/Components/Button',
+  argTypes: {
+    color: {
+      control: 'radio',
+      options: { Purple: 'purple', Gold: 'gold', White: 'white'}
+    },
+    size: {
+      control: 'select',
+      options: { Small: 'small', Large: 'large'}
+    },
+    style: {
+      control: 'select',
+      options: { Arrow: 'arrow', Plus: 'plus', Play: 'play', Primary: 'primary', Secondary: 'secondary'},
+      description: 'Button style'
+    }
+  }
+} %}
+  {% story default with {
+    name: '1. Default',
+    args: {
+      style: 'arrow',
+      link: 'https://uw.edu/map',
+      text: 'This is the call to action'|t,
+      color: 'purple',
+      size: 'large'
+    }
+  } %}
+    <p>Additional html can be included on a story. This paragraph is an example of that.</p>
+    {{ include('uw_drupal_theme:button', {
+      style,
+      link,
+      text,
+      color,
+      size
+    }) }}
+  {% endstory %}
+{% endstories %}

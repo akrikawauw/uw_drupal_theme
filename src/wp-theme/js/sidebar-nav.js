@@ -1,1 +1,0 @@
-"use strict";if(document.querySelector("nav#desktop-relative")){var sidebarNav=document.querySelector("nav#desktop-relative"),topLevelNavItem=document.querySelector("#desktop-relative ul ul li:first-child a");sidebarNav.setAttribute("aria-label",topLevelNavItem.textContent)}
