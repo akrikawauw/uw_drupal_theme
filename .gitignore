@@ -1,2 +1,7 @@
 # ignore node_modules
 node_modules/
+
+# Local files not needed
+.DS_store
+d-best-practice-check.txt
+d-coding-standards-check.txt
