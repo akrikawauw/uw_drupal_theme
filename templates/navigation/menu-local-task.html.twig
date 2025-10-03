@@ -20,5 +20,4 @@
     is_active ? 'active' : '',
   ]
 %}
-{# {{ kint(link )}} #}
 <li{{attributes.addClass(classes)}}>{{ link(link['#title'], link['#url'], { class: link_classes }) }}</li>

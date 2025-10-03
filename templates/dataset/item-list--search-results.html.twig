@@ -19,6 +19,13 @@
  * @see template_preprocess_item_list()
  */
 #}
+{%
+  set classes = [
+  'list-group',
+  context.plugin ~ '-results',
+]
+%}
+{% set attributes = attributes.addClass(classes) %}
 {% if context.list_style %}
   {%- set attributes = attributes.addClass('item-list__' ~ context.list_style) %}
 {% endif %}
