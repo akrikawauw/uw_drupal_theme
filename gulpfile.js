@@ -16,20 +16,22 @@ let gulp = require('gulp'),
 // Establish paths object to reference them below in the compiling functions.
 const paths = {
   scss: {
-    // This is our main entry point; within style.scss we're then referencing the
-    // uw_wp_theme's final bootstrap.css and style.css files.
+    /* This is our main entry point; within style.scss we're then referencing the
+     * uw_wp_theme's style.css, which is manually copied into ./scss/_style.css,
+     * and bootstrap.scss which lives in ./src/wp-theme/css.
+    */
     src: './scss/style.scss',
     dest: './css',
     minified: './css/style.min.css',
     watch: ['./scss/**/*.scss', './scss/**/*.scss'],
   },
   js: {
-    bootstrap: './node_modules/bootstrap/dist/js/bootstrap.min.js',
-    bootstrapmap: './node_modules/bootstrap/dist/js/bootstrap.min.js.map',
-    popper: './node_modules/popper.js/dist/popper.min.js',
-    poppermap: './node_modules/popper.js/dist/popper.min.js.map',
+    // bootstrap: './node_modules/bootstrap/dist/js/bootstrap.min.js',
+    // bootstrapmap: './node_modules/bootstrap/dist/js/bootstrap.min.js.map',
+    // popper: './node_modules/popper.js/dist/popper.min.js',
+    // poppermap: './node_modules/popper.js/dist/popper.min.js.map',
     theme: './js/misc.js',
-    wpJS: './src/wp-theme/js/*.js',
+    // wpJS: './src/wp-theme/js/*.js',
     dest2014: './js/2014',
     destRoot: './js',
     destLibs: './js/libs',
@@ -80,18 +82,6 @@ function jsHelpers() {
     .src([paths.js.helpers, paths.js.wpJS])
     .pipe(gulp.dest(paths.js.destRoot));
 }
-
-// Clean up before a build
-// TODO: assets folder as well; directory '2014' and 'libs' in js folder should be wiped...wasn't sure how to do
-// function clean() {
-//   return del([
-//     paths.cleanBuild.css,
-//     paths.cleanBuild.js,
-//     paths.cleanBuild.jsSrcMaps,
-//     '!./css/wp-fnl-output-bootstrap.css',
-//     '!./js/misc.js',
-//   ]);
-// }
 
 const build = gulp.series(
   styles
