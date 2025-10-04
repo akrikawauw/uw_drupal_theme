@@ -17,7 +17,7 @@ global-styling:
       css/style.css: { }
 #      css/colors.css: { weight: 99 }
   dependencies:
-    - core/jquery
+    - core/drupal
     - core/internal.backbone
     - core/internal.underscore
 bootstrap:
@@ -25,6 +25,7 @@ bootstrap:
     js/libs/popper.min.js: { weight: -19 }
     js/libs/bootstrap.min.js: { weight: -20 }
   dependencies:
+    - core/jquery
     - core/popperjs
 color.preview:
   version: VERSION

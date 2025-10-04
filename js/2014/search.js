@@ -1,27 +1,39 @@
 (function (Drupal, drupalSettings, $) {
   "use strict";
-  var body = document.getElementsByTagName("body"),
-    searchArea = document.getElementById("uwsearcharea"),
-    searchButton = document.querySelector("button.uw-search"),
-    radiobtn = document.getElementsByClassName("radiobtn"),
-    mobileSelect = document.getElementById("mobile-search-select"),
-    optionsFieldset = document.getElementById("uw"),
-    form = document.querySelector("form.uw-search"),
-    searchLabels = document.getElementById("search-labels"),
-    submitButton = document.querySelector("input.search"),
-    radioLabel = document.getElementsByClassName("radio"),
-    url = window.location.href,
-    searchSite = searchArea.dataset.search,
-    searchBar = document.getElementById("uw-search-bar");
+  const body = document.getElementsByTagName("body");
+  const searchArea = document.getElementById("uwsearcharea");
+  const searchButton = document.querySelector("button.uw-search");
+  const radiobtn = document.getElementsByClassName("radiobtn");
+  const mobileSelect = document.getElementById("mobile-search-select");
+  const optionsFieldset = document.getElementById("uw");
+  const form = document.querySelector("form.uw-search");
+  const searchLabels = document.getElementById("search-labels");
+  const submitButton = document.querySelector("input.search");
+  const radioLabel = document.getElementsByClassName("radio");
+  const url = window.location.href;
 
+  // Get the initial search site from theme settings.
+  let searchSite = searchArea.dataset.search;
+  let searchBar = document.getElementById("uw-search-bar");
+
+  // Change the form action and name attribute depending on which site should be searched.
   function switchAction() {
-    "uw" === searchSite ? ((form.action = "https://www.washington.edu/search/"), searchBar.setAttribute("name", "q")) : ((form.action = $("form.uw-search").data("sitesearch")), searchBar.setAttribute("name",  drupalSettings.search.searchName ));
+    if ( "uw" === searchSite ) {
+      form.action = "https://www.washington.edu/search/";
+      searchBar.setAttribute("name", "q");
+    } else {
+      form.action = $("form.uw-search").data("sitesearch");
+      // Get the search name from theme settings.
+      searchBar.setAttribute("name", drupalSettings.search.searchName);
+    }
   }
   function toggleSearchArea() {
     document.body.classList.toggle("search-open");
   }
-  function setAttributes(e, t) {
-    for (var a in t) e.setAttribute(a, t[a]);
+  function setAttributes( el, attrs ) {
+    for ( let key in attrs ) {
+      el.setAttribute( key, attrs[key] );
+    }
   }
   function toggleBlur() {
     document.body.classList.contains("search-open")
@@ -52,6 +64,7 @@
   });
 
   function submitForm(e) {
-    return form.submit(), !1;
+    form.submit();
+    return false;
   }
 })(Drupal, drupalSettings, jQuery);
