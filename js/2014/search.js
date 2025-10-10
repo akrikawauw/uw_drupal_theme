@@ -36,32 +36,92 @@
     }
   }
   function toggleBlur() {
-    document.body.classList.contains("search-open")
-      ? (searchArea.hidden = !1, optionsFieldset || mobileSelect ? "none" == window.getComputedStyle(mobileSelect).display ? optionsFieldset.focus() : mobileSelect.focus() : searchBar.focus(), setAttributes(searchButton, {
-        "aria-label": "close search area",
-        "aria-expanded": "true"
-      }), setAttributes(searchArea, {"aria-hidden": "false"})) : (searchArea.hidden = !0, setAttributes(searchButton, {
-        "aria-label": "open search area",
-        "aria-expanded": "false"
-      }), setAttributes(searchArea, {"aria-hidden": "true"}))
-  }
-  if (document.onkeydown = function (e) {
-    return e.keyCode !== UW.KEYCODES.TAB ? e.keyCode !== UW.KEYCODES.ESC || !$("body").hasClass("search-open") || (e.stopPropagation(), toggleSearchArea(), searchButton.focus(), toggleBlur(), !1) : (e.target !== submitButton || e.shiftKey || searchLabels.classList.add("focused"), e.target != submitButton && searchLabels.classList.contains("focused") && (searchLabels.classList.remove("focused"), !e.shiftKey) ? (e.stopPropagation(), toggleSearchArea(), searchButton.focus(), toggleBlur(), !1) : void 0)
-  }, searchButton.addEventListener("click", function () {
-    toggleSearchArea(), toggleBlur()
-  }), submitButton.addEventListener("click", function () {
-    Array.from(radiobtn).forEach(function (e) {
-      e.disabled = !0
-    }),
-      submitForm()
-      }),optionsFieldset || mobileSelect) if ("none" == window.getComputedStyle(mobileSelect).display) for (var _loop = function () {
-    var e = radiobtn[i];
-    e.onchange = function () {
-      searchSite = e.value, switchAction()
+    if (document.body.classList.contains("search-open")) {
+      searchArea.hidden = false;
+
+      // Check if this is mobile or desktop with toggle options.
+      if (optionsFieldset || mobileSelect) {
+
+        // If this is desktop, fieldset gets the focus.
+        if ('none' == window.getComputedStyle(mobileSelect).display) {
+          optionsFieldset.focus();
+        } else {
+
+          // If this is mobile, the mobile select gets the focus.
+          mobilSelect.focus()
+        }
+      } else {
+
+        // If there are no toggle options, put the focus on the search input.
+        searchBar.focus();
+      }
+
+      setAttributes(searchButton, {"aria-label": "close search area", "aria-expanded": "true"});
+      setAttributes(searchArea, {"aria-hidden": "false"});
+    } else {
+      setAttributes(searchButton, {"aria-label": "open search area", "aria-expanded": "false"});
+      setAttributes(searchArea, {"aria-hidden": "true"});
     }
-  }, i = 0; i < radioLabel.length; i++) _loop(); else mobileSelect.addEventListener("change", function () {
-    searchSite = mobileSelect.value, switchAction()
+  }
+
+  // Handle keydown events.
+  document.onkeydown = ( e ) => {
+    if ( ( e.keyCode === UW.KEYCODES.TAB ) ) {
+      if ( e.target === submitButton && ! e.shiftKey ) {
+        searchLabels.classList.add( 'focused' );
+      }
+      if ( ( e.target != submitButton && searchLabels.classList.contains( 'focused' ) ) ) {
+        searchLabels.classList.remove( 'focused' );
+        if ( ! e.shiftKey ) {
+          e.stopPropagation();
+          toggleSearchArea();
+          searchButton.focus();
+          toggleBlur();
+          return false;
+        }
+      }
+    } else if (  e.keyCode === UW.KEYCODES.ESC && $( 'body' ).hasClass( 'search-open' ) ) {
+      e.stopPropagation();
+      toggleSearchArea();
+      searchButton.focus();
+      toggleBlur();
+      return false;
+    } else {
+      return true;
+    }
+  };
+
+  searchButton.addEventListener("click", () => {
+    toggleSearchArea();
+    toggleBlur();
   });
+
+  submitButton.addEventListener("click", () => {
+    let radioArr = Array.from( radiobtn );
+    radioArr.forEach( btn => {
+      btn.disabled = true;
+    });
+    submitForm();
+  });
+
+  // Determine which site is selected.
+  // Check if this is mobile or desktop with toggle options.
+  if ( optionsFieldset || mobileSelect ) {
+    if ( 'none' == window.getComputedStyle( mobileSelect ).display ) { //desktop view
+      for ( let i = 0; i < radioLabel.length; i++ ) {
+        let input = radiobtn[i];
+        input.onchange = function() {
+          searchSite =  input.value;
+          switchAction( );
+        };
+      }
+    } else { //mobile view
+      mobileSelect.addEventListener( 'change', function() {
+        searchSite = mobileSelect.value;
+        switchAction( );
+      });
+    }
+  }
 
   function submitForm(e) {
     form.submit();
