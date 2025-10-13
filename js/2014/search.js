@@ -1,5 +1,6 @@
-(function (Drupal, drupalSettings, $) {
+(function (Drupal, $, drupalSettings) {
   "use strict";
+
   const body = document.getElementsByTagName("body");
   const searchArea = document.getElementById("uwsearcharea");
   const searchButton = document.querySelector("button.uw-search");
@@ -9,7 +10,7 @@
   const form = document.querySelector("form.uw-search");
   const searchLabels = document.getElementById("search-labels");
   const submitButton = document.querySelector("input.search");
-  const radioLabel = document.getElementsByClassName("radio");
+  const radioLabel = document.querySelectorAll("label.radio"); // This needs to be querySelector to ensure webform classes are avoided.
   const url = window.location.href;
 
   // Get the initial search site from theme settings.
@@ -18,7 +19,7 @@
 
   // Change the form action and name attribute depending on which site should be searched.
   function switchAction() {
-    if ( "uw" === searchSite ) {
+    if ("uw" === searchSite) {
       form.action = "https://www.washington.edu/search/";
       searchBar.setAttribute("name", "q");
     } else {
@@ -30,9 +31,9 @@
   function toggleSearchArea() {
     document.body.classList.toggle("search-open");
   }
-  function setAttributes( el, attrs ) {
-    for ( let key in attrs ) {
-      el.setAttribute( key, attrs[key] );
+  function setAttributes(el, attrs) {
+    for (let key in attrs) {
+      el.setAttribute(key, attrs[key]);
     }
   }
   function toggleBlur() {
@@ -41,38 +42,44 @@
 
       // Check if this is mobile or desktop with toggle options.
       if (optionsFieldset || mobileSelect) {
-
         // If this is desktop, fieldset gets the focus.
         if ('none' == window.getComputedStyle(mobileSelect).display) {
           optionsFieldset.focus();
         } else {
-
           // If this is mobile, the mobile select gets the focus.
-          mobilSelect.focus()
+          mobilSelect.focus();
         }
       } else {
-
         // If there are no toggle options, put the focus on the search input.
         searchBar.focus();
       }
-
-      setAttributes(searchButton, {"aria-label": "close search area", "aria-expanded": "true"});
-      setAttributes(searchArea, {"aria-hidden": "false"});
+      setAttributes(searchButton, {
+        "aria-label": "close search area",
+        "aria-expanded": "true"
+      });
+      setAttributes(searchArea, {
+        "aria-hidden": "false"
+      });
     } else {
-      setAttributes(searchButton, {"aria-label": "open search area", "aria-expanded": "false"});
-      setAttributes(searchArea, {"aria-hidden": "true"});
+      setAttributes(searchButton, {
+        "aria-label": "open search area",
+        "aria-expanded": "false"
+      });
+      setAttributes(searchArea, {
+        "aria-hidden": "true"
+      });
     }
   }
 
   // Handle keydown events.
-  document.onkeydown = ( e ) => {
-    if ( ( e.keyCode === UW.KEYCODES.TAB ) ) {
-      if ( e.target === submitButton && ! e.shiftKey ) {
-        searchLabels.classList.add( 'focused' );
+  document.onkeydown = e => {
+    if (e.keyCode === UW.KEYCODES.TAB) {
+      if (e.target === submitButton && !e.shiftKey) {
+        searchLabels.classList.add('focused');
       }
-      if ( ( e.target != submitButton && searchLabels.classList.contains( 'focused' ) ) ) {
-        searchLabels.classList.remove( 'focused' );
-        if ( ! e.shiftKey ) {
+      if (e.target != submitButton && searchLabels.classList.contains('focused')) {
+        searchLabels.classList.remove('focused');
+        if (!e.shiftKey) {
           e.stopPropagation();
           toggleSearchArea();
           searchButton.focus();
@@ -80,7 +87,7 @@
           return false;
         }
       }
-    } else if (  e.keyCode === UW.KEYCODES.ESC && $( 'body' ).hasClass( 'search-open' ) ) {
+    } else if (e.keyCode === UW.KEYCODES.ESC && $('body').hasClass('search-open')) {
       e.stopPropagation();
       toggleSearchArea();
       searchButton.focus();
@@ -90,15 +97,13 @@
       return true;
     }
   };
-
   searchButton.addEventListener("click", () => {
     toggleSearchArea();
     toggleBlur();
   });
-
   submitButton.addEventListener("click", () => {
-    let radioArr = Array.from( radiobtn );
-    radioArr.forEach( btn => {
+    let radioArr = Array.from(radiobtn);
+    radioArr.forEach(btn => {
       btn.disabled = true;
     });
     submitForm();
@@ -106,25 +111,26 @@
 
   // Determine which site is selected.
   // Check if this is mobile or desktop with toggle options.
-  if ( optionsFieldset || mobileSelect ) {
-    if ( 'none' == window.getComputedStyle( mobileSelect ).display ) { //desktop view
-      for ( let i = 0; i < radioLabel.length; i++ ) {
+  if (optionsFieldset || mobileSelect) {
+    if ('none' == window.getComputedStyle(mobileSelect).display) {
+      //desktop view
+      for (let i = 0; i < radioLabel.length; i++) {
         let input = radiobtn[i];
-        input.onchange = function() {
-          searchSite =  input.value;
-          switchAction( );
+        input.onchange = function () {
+          searchSite = input.value;
+          switchAction();
         };
       }
-    } else { //mobile view
-      mobileSelect.addEventListener( 'change', function() {
+    } else {
+      //mobile view
+      mobileSelect.addEventListener('change', function () {
         searchSite = mobileSelect.value;
-        switchAction( );
+        switchAction();
       });
     }
   }
-
   function submitForm(e) {
     form.submit();
     return false;
   }
-})(Drupal, drupalSettings, jQuery);
+})(Drupal, jQuery, drupalSettings);

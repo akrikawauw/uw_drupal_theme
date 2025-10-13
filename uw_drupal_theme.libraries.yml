@@ -4,13 +4,13 @@ global-styling:
     js/skip-link-focus-fix.js: {}
     js/keyboard-navmenu.js: {}
     js/keyboard-button.js: {}
-#    js/libs/bootstrap.min.js: { minified: true }
-    js/2014/2014.js: {}
-    js/2014/alert.js: {}
-    js/2014/quicklinks.js: {}
-    js/2014/select.js: {}
+#    js/2014/2014.js: {}
+#    js/2014/alert.js: {}
+#    js/2014/quicklinks.js: {}
+#    js/2014/select.js: {}
     js/classic-menu.js: {}
     js/global.js: {}
+    js/2014/2014bundle.min.js: { minified: true }
 
   css:
     component:
@@ -22,8 +22,8 @@ global-styling:
     - core/internal.underscore
 bootstrap:
   js:
-    js/libs/popper.min.js: { weight: -19 }
-    js/libs/bootstrap.min.js: { weight: -20 }
+    js/libs/popper.min.js: { minified: true, weight: -19 }
+    js/libs/bootstrap.min.js: { minified: true, weight: -20 }
   dependencies:
     - core/jquery
     - core/popperjs
@@ -43,7 +43,7 @@ search:
     - core/drupalSettings
 searchtoggleonly:
   js:
-    js/searchtoggleonly.js: {}
+    js/2014/searchtoggleonly.js: {}
 top-links-to-dropdowns:
   version: 1.x
   js:
