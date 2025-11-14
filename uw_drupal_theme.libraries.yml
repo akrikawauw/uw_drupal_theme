@@ -4,13 +4,10 @@ global-styling:
     js/skip-link-focus-fix.js: {}
     js/keyboard-navmenu.js: {}
     js/keyboard-button.js: {}
-#    js/2014/2014.js: {}
-#    js/2014/alert.js: {}
-#    js/2014/quicklinks.js: {}
-#    js/2014/select.js: {}
     js/classic-menu.js: {}
     js/global.js: {}
     js/2014/2014bundle.min.js: { minified: true }
+    js/components/accordion.js: {}
 
   css:
     component:

@@ -42,6 +42,11 @@ const paths = {
       wp2014searchtoggle: './src/wp-theme/js/2014/searchtoggle.js',
       searchtoggleonly: './src/staging/js/searchtoggleonly.js',
       wp2014select: './src/wp-theme/js/2014/select.js',
+      wpShortcodesAccordion: './src/wp-theme/js/shortcodes/accordion.js',
+      wpShortcodesCustomLink: './src/wp-theme/js/shortcodes/custom-link.js',
+      wpShortcodesGallery: './src/wp-theme/js/shortcodes/gallery.js',
+      wpShortcodesModal: './src/wp-theme/js/shortcodes/modal.js',
+      wpShortcodesTabTours: './src/wp-theme/js/shortcodes/tabs-tours.js',
       classicMenu: './src/wp-theme/js/classic-menu.js',
       keyboardButton: './src/wp-theme/js/keyboard-button.js',
       keyboardNavmenu: './src/wp-theme/js/keyboard-navmenu.js',
@@ -53,7 +58,8 @@ const paths = {
     },
     dest: {
       wp2014: './js/2014',
-      jsRoot: './js'
+      jsRoot: './js',
+      wpShortcodes: './js/components'
     }
   },
   cleanBuild: {
@@ -112,6 +118,34 @@ function js2014() {
     .pipe(gulp.dest(paths.js.dest.wp2014));
 }
 
+async function jsShortcodes() {
+  const shortcodesFiles = [
+    { file: paths.js.src.wpShortcodesAccordion, wrap: true },
+    { file: paths.js.src.wpShortcodesCustomLink, wrap: false },
+    { file: paths.js.src.wpShortcodesGallery, wrap: false },
+    { file: paths.js.src.wpShortcodesModal, wrap: true },
+    { file: paths.js.src.wpShortcodesTabTours, wrap: true }
+  ];
+  shortcodesFiles.forEach(
+    (shortcodeFile) => {
+      return gulp
+        .src(shortcodeFile.file)
+        .pipe(
+            tap((file) => {
+              if (shortcodeFile.wrap) {
+                file.contents = Buffer.from(_wrapForDrupal(file.contents.toString(), ', drupalSettings'));
+              }
+            })
+        )
+          // tap( (file) => {
+          // file.contents = Buffer.from(_wrapForDrupal(file.contents.toString(), ', drupalSettings'));
+        .pipe(babel())
+        // .pipe(uglify())
+        .pipe(gulp.dest(paths.js.dest.wpShortcodes))
+    }
+  );
+}
+
 function jsSearch() {
   return gulp
     .src(paths.js.src.wp2014search)
@@ -152,7 +186,8 @@ function _wrapForDrupal(incoming, optionsAsString) {
 }
 
 exports.styles = styles;
-exports.js = gulp.series(js2014, jsSearch, jsSearchToggleOnly);
+exports.js = gulp.series(js2014, jsSearch, jsSearchToggleOnly, jsShortcodes);
+exports.jsShortcodes = jsShortcodes;
 exports.js2014 = js2014;
 exports.jsSearch = jsSearch;
 exports.jsSearchToggle = jsSearchToggleOnly;
