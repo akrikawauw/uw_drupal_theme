@@ -1,9 +1,6 @@
 # ignore node_modules
 node_modules/
 
-# ignore source files from uw_wp_theme
-src/
-
 # Local files not needed
 .DS_store
 d-best-practice-check.txt

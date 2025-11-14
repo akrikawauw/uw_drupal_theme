@@ -14,8 +14,9 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "bootstrap": "4.6.0",
+    "bootstrap": "^4.6.2",
     "bootstrap-icons": "^1.0.0-alpha3",
+    "css-select": "^6.0.0",
     "gulp-cli": "^3.1.0",
     "jquery": "^3.3.1",
     "popper.js": "^1.14.3",
