@@ -1,7 +1,10 @@
 # This is so your IDE knows about the syntax for fixes and autocomplete.
-$schema: https://git.drupalcode.org/project/drupal/-/raw/10.1.x/core/modules/sdc/src/metadata.schema.json
-enforce_prop_schemas: true
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+
 name: Button
+
+group: UW Drupal Theme
+
 status: experimental
 props:
   type: object

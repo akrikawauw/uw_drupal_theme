@@ -1,0 +1,19 @@
+{% set tile_image_classes = [
+    'card-img',
+    style is same as 'inset' ? 'card-img-inset' : 'card-img-top'
+  ]
+%}
+{% set alignment = style is same as 'inset' ? 'text-center' : 'text-left' %}
+
+<div{{attributes.addClass('card').addClass(style).addClass(alignment).addClass(color)}}>
+  {% if style == 'block-top' %}
+  <{{ titletag }} class="card-title mb-0">{{ card_title }}</{{ titletag }}>
+  {% else %}
+    <div class="card-body">
+    <{{ titletag }} class="card-title mb-0">{{ card_title }}</{{ titletag }}>
+    </div>
+
+{% endif %}
+
+<p>This card is {{ style }}</p>
+</div>

@@ -1,0 +1,76 @@
+# This is so your IDE knows about the syntax for fixes and autocomplete.
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+
+# The human readable name.
+name: Card
+
+group: UW Drupal Theme
+# Status can be: "experimental", "stable", "deprecated", "obsolete".
+status: experimental
+
+props:
+  type: object
+  properties:
+    style:
+      type: string
+      title: Card style
+      description: The style of card.
+      enum: ['inset', 'no-image', 'image-top', 'block-top', 'text-link', 'step', 'large', 'half-block-large', 'full-width', 'half-block-full']
+      default: 'inset'
+    align:
+      type: string
+      title: Alignment
+      description: Aligns the image on the side chosen. For large and full-width cards only.
+      enum: ['left', 'right']
+    color:
+      type: string
+      title: Color scheme
+      description: This is the color scheme for the card. The options are gold, white, and purple.
+      enum: ['gold', 'white', 'purple']
+    image:
+      type: string
+      title: Image
+      description: URL of the image for the card.
+    alt:
+      type: string
+      title: Alt text
+      description: Alt text for the card image.
+    icon:
+      type: string
+      title: Icon
+      description: Only used with step cards. For example 'ic-check'.
+    card_title:
+      type: string
+      title: Heading/title
+      description: Heading (title) for the card.
+    titletag:
+      type: string
+      title: Heading tag
+      description: Heading tag used for the title. Supported tags are h2, h3, h4.
+      enum: ['h2', 'h3', 'h4']
+      default: 'h2'
+    subtitle:
+      type: string
+      title: Subtitle
+      description: Only used in step cards.
+    linktext:
+      type: string
+      title: Link text for the card button
+    linkurl:
+      type: string
+      title: Url for the card button link
+    stretchedlink:
+      type: boolean
+      title: Stretched link?
+      description: Makes the entire card clickable.
+      enum: [true, false]
+      default: false
+  required:
+    - style
+    - card_title
+slots:
+  body:
+    title: Card body
+    description: Complete HTML body for the card.
+
+
