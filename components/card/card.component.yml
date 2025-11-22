@@ -15,7 +15,7 @@ props:
       type: string
       title: Card style
       description: The style of card.
-      enum: ['inset', 'no-image', 'image-top', 'block-top', 'text-link', 'step', 'large', 'half-block-large', 'full-width', 'half-block-full']
+      enum: ['inset', 'no-image', 'image-top', 'block', 'text-link', 'step', 'large', 'half-block-large', 'full-width', 'half-block-full', 'half-block-full-width']
       default: 'inset'
     align:
       type: string
@@ -39,7 +39,7 @@ props:
       type: string
       title: Icon
       description: Only used with step cards. For example 'ic-check'.
-    card_title:
+    title:
       type: string
       title: Heading/title
       description: Heading (title) for the card.
@@ -59,15 +59,18 @@ props:
     linkurl:
       type: string
       title: Url for the card button link
-    stretchedlink:
+    stretched_link:
       type: boolean
       title: Stretched link?
       description: Makes the entire card clickable.
       enum: [true, false]
       default: false
+    id:
+      type: string
+      title: ID for this card (optional)
   required:
     - style
-    - card_title
+    - title
 slots:
   body:
     title: Card body
