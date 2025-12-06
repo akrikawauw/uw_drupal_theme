@@ -1,5 +1,6 @@
 {# Handles output for all card variants. #}
 {# Related uw_wp_theme file: /inc/shortcodes/class.cards-shortcode.php #}
+{{  kint(style) }}
 {% set card_class = [
     style is same as 'inset' ? 'inset',
     style is same as 'no-image' ? 'no-image',
@@ -45,7 +46,7 @@
 {# Set background image inline style text for large and full-width cards. #}
 {% if style in ['large', 'full-width', 'half-block-large', 'half-block-full', 'half-block-full-width'] %}
   {% set image_div_style_attributes = {
-    'background-image':':url(' ~ image ~ ')'
+    'background-image':':url(' ~ image.image_url ~ ')'
   } %}
 {% set image_div_attributes = create_attribute() %}
   {% for key,value in image_div_style_attributes %}
@@ -73,8 +74,9 @@
 <div{{ attributes.addClass('card').addClass(card_class).addClass(text_class).addClass(card_color).setAttribute('id', card_id) }} style="width: {{ card_width }};">
   <div class="card-body">
   <{{ titletag }} class="card-title">{{ title }}</{{ titletag }}>
-  {%  if image %}
-    <div class="card-image-inset"><img src="{{ image }}" class="card-img card-img-inset" alt="{{ alt }}" /></div>
+  {%  if image_block %}
+    <div class="card-image-inset">{{ image_block }}</div>
+{#      <img src="{{ image_block }}" class="card-img card-img-inset" alt="{{ image.alt }}" /></div>#}
   {% endif %}
   {{ body }}
   {% if linkurl and linktext %}
@@ -89,7 +91,7 @@
     <div class="card-body">
       <{{ titletag }} class="card-title mb-0">{{ title }}</{{ titletag }}>
     {%  if image %}
-      <div class="card-image-top"><img src="{{ image }}" class="card-img card-img-top" alt="{{ alt }}" /></div>
+      <div class="card-image-top"><img src="{{ image.image_url }}" class="card-img card-img-top" alt="{{ image.alt }}" /></div>
     {% endif %}
     <div class="udub-slant-divider"><span></span></div>
     <div class="card-content">

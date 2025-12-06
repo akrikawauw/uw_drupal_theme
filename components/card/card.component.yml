@@ -28,13 +28,18 @@ props:
       description: This is the color scheme for the card. The options are gold, white, and purple.
       enum: ['gold', 'white', 'purple']
     image:
-      type: string
+      type: object
       title: Image
-      description: URL of the image for the card.
-    alt:
-      type: string
-      title: Alt text
-      description: Alt text for the card image.
+      description: Image for the card.
+      properties:
+        image_url:
+          type: string
+          format: uri-reference
+          description: Url of the card image.
+        alt:
+          type: string
+          title: Alt text
+          description: Alt text for the card image.
     icon:
       type: string
       title: Icon
@@ -59,6 +64,7 @@ props:
     linkurl:
       type: string
       title: Url for the card button link
+      format: uri-reference
     stretched_link:
       type: boolean
       title: Stretched link?
@@ -75,5 +81,8 @@ slots:
   body:
     title: Card body
     description: Complete HTML body for the card.
+  image_block:
+    title: Image
+    description: Image as block. Use when placing image as media.
 
 
