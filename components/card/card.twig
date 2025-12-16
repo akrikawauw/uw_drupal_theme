@@ -1,6 +1,10 @@
 {# Handles output for all card variants. #}
 {# Related uw_wp_theme file: /inc/shortcodes/class.cards-shortcode.php #}
-{{  kint(style) }}
+{#{{  kint(image_block) }}#}
+{#{{  kint(image) }}#}
+{#{image_block}#}
+{#{{  image_block }}#}
+{#{{  image.image_url }}#}
 {% set card_class = [
     style is same as 'inset' ? 'inset',
     style is same as 'no-image' ? 'no-image',
@@ -45,9 +49,11 @@
 
 {# Set background image inline style text for large and full-width cards. #}
 {% if style in ['large', 'full-width', 'half-block-large', 'half-block-full', 'half-block-full-width'] %}
-  {% set image_div_style_attributes = {
-    'background-image':':url(' ~ image.image_url ~ ')'
-  } %}
+  {% if image.image_url is not empty %}
+    {% set image_div_style_attributes = { 'background-image:': 'url(' ~ image.image_url ~ ')' } %}
+  {% else %}
+    {% set image_div_style_attributes = {'background-image:': 'url(' ~ file_url(image_block.entity.field_media_image.entity.fileuri)  ~ ')'} %}
+  {% endif %}
 {% set image_div_attributes = create_attribute() %}
   {% for key,value in image_div_style_attributes %}
   {% set image_div_attributes = image_div_attributes.setAttribute('style', {key,value}) %}
