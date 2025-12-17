@@ -3,20 +3,49 @@ $schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schema
 
 # The human readable name.
 name: Card
+group: Card
 
-group: UW Drupal Theme
 # Status can be: "experimental", "stable", "deprecated", "obsolete".
 status: experimental
-
+links:
+  - 'https://www.washington.edu/docs/shortcode-cookbook/cards/'
+  - 'https://getbootstrap.com/docs/4.6/components/card/'
+variants:
+  default:
+    title: Inset
+  no__image:
+    title: 'No image'
+  image__top:
+    title: 'Image top'
+  block:
+    title: 'Block'
+  text__link:
+    title: 'Text link'
+  step:
+    title: Step
+  large:
+    title: Large
+  half__block__large:
+    title: 'Half block large'
+  full__width:
+    title: 'Full width'
+  half__block__full:
+    title: 'Half block full width'
+  half__block__full__width:
+    title: 'Half block full width'
+slots:
+  title:
+    title: Card title
+    description: Heading (title) for the card.
+  body:
+    title: Card body
+    description: Complete HTML body for the card.
+  image:
+    title: Card image
+    description: Image as block. Use when placing image as media.
 props:
   type: object
   properties:
-    style:
-      type: string
-      title: Card style
-      description: The style of card.
-      enum: ['inset', 'no-image', 'image-top', 'block', 'text-link', 'step', 'large', 'half-block-large', 'full-width', 'half-block-full', 'half-block-full-width']
-      default: 'inset'
     align:
       type: string
       title: Alignment
@@ -27,33 +56,23 @@ props:
       title: Color scheme
       description: This is the color scheme for the card. The options are gold, white, and purple.
       enum: ['gold', 'white', 'purple']
-    image:
-      type: object
-      title: Image
-      description: Image for the card.
-      properties:
-        image_url:
-          type: string
-          format: uri-reference
-          description: Url of the card image.
-        alt:
-          type: string
-          title: Alt text
-          description: Alt text for the card image.
     icon:
       type: string
       title: Icon
       description: Only used with step cards. For example 'ic-check'.
-    title:
-      type: string
-      title: Heading/title
-      description: Heading (title) for the card.
-    titletag:
-      type: string
+    heading_level:
+      type: integer
       title: Heading tag
       description: Heading tag used for the title. Supported tags are h2, h3, h4.
-      enum: ['h2', 'h3', 'h4']
-      default: 'h2'
+      enum:
+        - 2
+        - 3
+        - 4
+      "meta:enum":
+        2: "h2 (Default)"
+        3: h3
+        4: h4
+      default: 2
     subtitle:
       type: string
       title: Subtitle
@@ -74,15 +93,6 @@ props:
     id:
       type: string
       title: ID for this card (optional)
-  required:
-    - style
-    - title
-slots:
-  body:
-    title: Card body
-    description: Complete HTML body for the card.
-  image_block:
-    title: Image
-    description: Image as block. Use when placing image as media.
+
 
 

@@ -1,41 +1,39 @@
 {# Handles output for all card variants. #}
 {# Related uw_wp_theme file: /inc/shortcodes/class.cards-shortcode.php #}
-{#{{  kint(image_block) }}#}
-{#{{  kint(image) }}#}
-{#{image_block}#}
-{#{{  image_block }}#}
-{#{{  image.image_url }}#}
+{%  if variant and variant !='default' %}
+  {% set variant = variant|replace({'__': '-'}) %}
+{% endif %}
 {% set card_class = [
-    style is same as 'inset' ? 'inset',
-    style is same as 'no-image' ? 'no-image',
-    style is same as 'image-top' ? 'image-top',
-    style is same as 'block' ? 'block-top',
-    style is same as 'text-link' ? 'white text-button',
-    style is same as 'step' ? 'step white text-button',
-    style is same as 'large' ? 'large',
-    style is same as 'half-block-large' ? 'large half-block',
-    style is same as 'full-width' ? 'full-width uw-slant-border',
-    style is same as 'half-block-full' ? 'full-width half-block',
-    style is same as 'half-block-full-width' ? 'full-width half-block',
+    variant is same as 'default' ? 'inset',
+    variant is same as 'no-image' ? 'no-image',
+    variant is same as 'image-top' ? 'image-top',
+    variant is same as 'block' ? 'block-top',
+    variant is same as 'text-link' ? 'white text-button',
+    variant is same as 'step' ? 'step white text-button',
+    variant is same as 'large' ? 'large',
+    variant is same as 'half-block-large' ? 'large half-block',
+    variant is same as 'full-width' ? 'full-width uw-slant-border',
+    variant is same as 'half-block-full' ? 'full-width half-block',
+    variant is same as 'half-block-full-width' ? 'full-width half-block',
   ]
 %}
 {% set text_class = [
-    style is same as 'inset' ? 'text-center' : 'text-left',
+    variant is same as 'inset' ? 'text-center' : 'text-left',
   ]
 %}
 {% set card_color = [
     color is same as 'purple' ? 'purple',
     color is same as 'white' ? 'white',
     color is same as 'gold' ? 'lightgold',
-    (style is same as 'block' and color is not same as 'gold') ? 'purple',
-    style is same as 'inset' and color is empty ? 'lightgold',
+    (variant is same as 'block' and color is not same as 'gold') ? 'purple',
+    variant is same as 'inset' and color is empty ? 'lightgold',
   ]
 %}
 {% set button_color = [
     color is same as 'purple' ? 'secondary light-gold',
     color is same as 'white' ? 'primary purple',
-    (style is same as 'inset' and color is empty) ? 'purple',
-    (color is same as 'gold' and style is not same as 'block') ? 'white'
+    (variant is same as 'inset' and color is empty) ? 'purple',
+    (color is same as 'gold' and variant is not same as 'block') ? 'white'
   ]
 %}
 {% set link_class = stretched_link ? 'stretched-link' : '' %}
@@ -45,15 +43,15 @@
 {% endif %}
 
 {# Set card width for inline style attribute only for these card styles. #}
-{% set card_width = style in ['full-width', 'half-block-full', 'half-block-full-width'] ? '100vw' : '100%' %}
+{% set card_width = variant in ['full-width', 'half-block-full', 'half-block-full-width'] ? '100vw' : '100%' %}
 
 {# Set background image inline style text for large and full-width cards. #}
-{% if style in ['large', 'full-width', 'half-block-large', 'half-block-full', 'half-block-full-width'] %}
-  {% if image.image_url is not empty %}
-    {% set image_div_style_attributes = { 'background-image:': 'url(' ~ image.image_url ~ ')' } %}
-  {% else %}
-    {% set image_div_style_attributes = {'background-image:': 'url(' ~ file_url(image_block.entity.field_media_image.entity.fileuri)  ~ ')'} %}
-  {% endif %}
+{% if variant in ['large', 'full-width', 'half-block-large', 'half-block-full', 'half-block-full-width'] %}
+{#  {% if image.uri is not empty %}#}
+    {% set image_div_style_attributes = { 'background-image:': 'url(' ~ image['#uri'] ~ ')' } %}
+{#  {% else %}#}
+{#    {% set image_div_style_attributes = {'background-image:': 'url(' ~ file_url(image.urifileuri)  ~ ')'} %}#}
+{#  {% endif %}#}
 {% set image_div_attributes = create_attribute() %}
   {% for key,value in image_div_style_attributes %}
   {% set image_div_attributes = image_div_attributes.setAttribute('style', {key,value}) %}
@@ -61,28 +59,27 @@
 {% endif %}
 
 {# We need to generate a random number for the svg id if one of these styles. #}
-{% if style in ['full-width', 'half-block-full', 'half-block-full-width'] %}
+{% if varoamt in ['full-width', 'half-block-full', 'half-block-full-width'] %}
   {% set random_number = random(1000) %}
 {% endif %}
 
 {# Read in the alignment for large and full width cards and set up classes for them. #}
 {% set align_class = [
-    (style in ['large', 'full-width', 'half-block-large', 'half-block-full', 'half-block-full-width'] and align is same as 'left') ? 'img-right',
-    (style in ['large', 'full-width', 'half-block-large', 'half-block-full', 'half-block-full-width'] and align is same as 'right') ? 'img-left',
+    (variant in ['large', 'full-width', 'half-block-large', 'half-block-full', 'half-block-full-width'] and align is same as 'left') ? 'img-right',
+    (variant in ['large', 'full-width', 'half-block-large', 'half-block-full', 'half-block-full-width'] and align is same as 'right') ? 'img-left',
   ]
 %}
 
 {# We need a unique attribute variable to store and add button classes. #}
 {% set button_attributes = create_attribute() %}
 
-{%  if style is same as 'inset' %}
+{%  if variant is same as 'default' %}
 {# Output for 'inset' card. #}
 <div{{ attributes.addClass('card').addClass(card_class).addClass(text_class).addClass(card_color).setAttribute('id', card_id) }} style="width: {{ card_width }};">
   <div class="card-body">
-  <{{ titletag }} class="card-title">{{ title }}</{{ titletag }}>
-  {%  if image_block %}
-    <div class="card-image-inset">{{ image_block }}</div>
-{#      <img src="{{ image_block }}" class="card-img card-img-inset" alt="{{ image.alt }}" /></div>#}
+  <h{{ heading_level }} class="card-title">{{ title }}</h{{ heading_level }}>
+  {%  if image %}
+    <div class="card-image-inset">{{ image|add_class('card-img','card-image-inset') }}</div>
   {% endif %}
   {{ body }}
   {% if linkurl and linktext %}
@@ -91,13 +88,13 @@
   </div>
 </div>
 
-{% elseif style is same as 'image-top' %}
+{% elseif variant is same as 'image-top' %}
 {# Output for 'image-top' card. #}
 <div{{ attributes.addClass('card').addClass(card_class).addClass(text_class).addClass(card_color).setAttribute('id', card_id) }} style="width: {{ card_width }};">
     <div class="card-body">
-      <{{ titletag }} class="card-title mb-0">{{ title }}</{{ titletag }}>
+      <h{{ heading_level }} class="card-title mb-0">{{ title }}</h{{ heading_level }}>
     {%  if image %}
-      <div class="card-image-top"><img src="{{ image.image_url }}" class="card-img card-img-top" alt="{{ image.alt }}" /></div>
+      <div class="card-image-top">{{ image|add_class('card-img','card-img-top') }}</div>
     {% endif %}
     <div class="udub-slant-divider"><span></span></div>
     <div class="card-content">
@@ -109,11 +106,11 @@
   </div>
 </div>
 
-{% elseif style is same as 'no-image' %}
+{% elseif variant is same as 'no-image' %}
 {# Output for 'no-image' card. #}
 <div{{ attributes.addClass('card').addClass(card_class).addClass(text_class).addClass(card_color).setAttribute('id', card_id) }} style="width: {{ card_width }};">
   <div class="card-body">
-    <{{ titletag }} class="card-title mb-0">{{ title }}</{{ titletag }}>
+    <h{{ heading_level }} class="card-title mb-0">{{ title }}</h{{ heading_level }}>
     <div class="udub-slant-divider"><span></span></div>
     <div class="card-content">
       {{ body }}
@@ -124,10 +121,10 @@
   </div>
 </div>
 
-{% elseif style is same as 'block' %}
+{% elseif variant is same as 'block' %}
   {# Output for 'block' card. #}
   <div{{ attributes.addClass('card').addClass(card_class).addClass(text_class).addClass(card_color).setAttribute('id', card_id) }} style="width: {{ card_width }};">
-    <{{ titletag }} class="card-title">{{ title }}</{{ titletag }}>
+    <h{{ heading_level }} class="card-title">{{ title }}</h{{ heading_level }}>
     <div class="card-body">
       <div class="card-content">
         {{ body }}
@@ -138,11 +135,11 @@
   </div>
 </div>
 
-{% elseif style is same as 'text-link' %}
+{% elseif variant is same as 'text-link' %}
 {# Output for 'text-link' card. #}
 <div{{ attributes.addClass('card').addClass(card_class).addClass(text_class).addClass(card_color).setAttribute('id', card_id) }} style="width: {{ card_width }};">
   <div class="card-body">
-    <{{ titletag }} class="card-title mb-0">{{ title }}</{{ titletag }}>
+    <h{{ heading_level }} class="card-title mb-0">{{ title }}</h{{ heading_level }}>
     <div class="udub-slant-divider"><span></span></div>
     <div class="card-content">
       {{ body }}
@@ -153,11 +150,11 @@
   </div>
 </div>
 
-{% elseif style is same as 'step' %}
+{% elseif variant is same as 'step' %}
   {# Output for 'step' card. #}
   <div{{ attributes.addClass('card').addClass(card_class).addClass(text_class).addClass(card_color).setAttribute('id', card_id) }} style="width: {{ card_width }};">
     <div class="card-body">
-      <{{ titletag }} class="card-title mb-0">{{ title }}</{{ titletag }}>
+      <h{{ heading_level }} class="card-title mb-0">{{ title }}</h{{ heading_level }}>
     {% if subtitle %}
       <div class="subtitle">{{ subtitle }}</div>
     {% endif %}
@@ -174,13 +171,13 @@
   </div>
 </div>
 
-{% elseif style in ['large', 'half-block-large'] %}
+{% elseif variant in ['large', 'half-block-large'] %}
 {# Output for 'large' and 'half-block-large' cards. #}
 <div{{ attributes.addClass('card').addClass(card_class).addClass(text_class).addClass(card_color).addClass(align_class).setAttribute('id', card_id) }} style="width: {{ card_width }};">
   <div{{ image_div_attributes.addClass('image-large') }}></div>
   <div class="card-body">
     <div class="inner-card-body">
-      <{{ titletag }} class="card-title">{{ title }}</{{ titletag }}>
+      <h{{ heading_level }} class="card-title">{{ title }}</h{{ heading_level }}>
       {{ body }}
     {% if linkurl and linktext %}
       <p class="button"><a{{ button_attributes.addClass('btn', 'btn-lg', 'arrow', button_color) }} href="{{ linkurl }}"><span>{{ linktext }}</span><span class="arrow-box"><span class="arrow"></span></span></a></p>
@@ -189,13 +186,13 @@
   </div>
 </div>
 
-{% elseif style in ['full-width', 'half-block-full', 'half-block-full-width'] %}
+{% elseif variant in ['full-width', 'half-block-full', 'half-block-full-width'] %}
 {# Output for 'full-width', 'half-block-full' and 'half-block-full-width' cards. #}
 <div{{ attributes.addClass('card').addClass(card_class).addClass(text_class).addClass(card_color).addClass(align_class).setAttribute('id', card_id) }} style="width: {{ card_width }};">
   <div{{ image_div_attributes.addClass('image-large') }}></div>
   <div class="card-body">
     <div class="inner-card-body">
-      <{{ titletag }} class="card-title">{{ title }}</{{ titletag }}>
+      <h{{ heading_level }} class="card-title">{{ title }}</h{{ heading_level }}>
       {{ body }}
       {% if linkurl and linktext %}
       <p class="button"><a{{ button_attributes.addClass('btn', 'btn-lg', 'arrow', button_color) }} href="{{ linkurl }}"><span>{{ linktext }}</span><span class="arrow-box"><span class="arrow"></span></span></a></p>
