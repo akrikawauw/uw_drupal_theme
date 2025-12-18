@@ -3,7 +3,7 @@ $schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schema
 
 name: "Inset (default)"
 slots:
-  body:
+  content:
     'The card body here and it is important.'
   title:
     "Important card 1"
@@ -15,8 +15,8 @@ slots:
 props:
   variant: "default"
   heading_level: 2
-  linkurl: "/"
+  linkurl: "https://uw.edu"
   linktext: "Go home"
-  color: purple
+  color: gold
   attributes:
     style: "width: 18rem;"

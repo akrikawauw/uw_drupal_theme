@@ -2,14 +2,16 @@
 $schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
 
 # The human readable name.
-name: Card
+name: Card (UW Drupal Theme)
 group: Card
 
 # Status can be: "experimental", "stable", "deprecated", "obsolete".
 status: experimental
 links:
-  - 'https://www.washington.edu/docs/shortcode-cookbook/cards/'
-  - 'https://getbootstrap.com/docs/4.6/components/card/'
+  - url: 'https://www.washington.edu/docs/shortcode-cookbook/cards/'
+    title: 'UW WordPress theme Shortcode Cookbook'
+  - url: 'https://getbootstrap.com/docs/4.6/components/card/'
+    title: 'Bootstrap 4.6 documentation'
 variants:
   default:
     title: Inset
@@ -37,12 +39,15 @@ slots:
   title:
     title: Card title
     description: Heading (title) for the card.
-  body:
+  content:
     title: Card body
     description: Complete HTML body for the card.
   image:
     title: Card image
     description: Image as block. Use when placing image as media.
+  links:
+    title: Links
+    description: 'Array of links.'
 props:
   type: object
   properties:

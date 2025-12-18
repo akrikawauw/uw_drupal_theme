@@ -3,7 +3,7 @@ $schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schema
 
 name: "Full width"
 slots:
-  body:
+  content:
     'The card body here and it is important.'
   title:
     'Really full width card'
@@ -15,7 +15,7 @@ slots:
 props:
   variant: full__width
   heading_level: 2
-  linkurl: "/"
+  linkurl: "https://uw.edu"
   linktext: "Special deal"
   color: gold
   alignment: left

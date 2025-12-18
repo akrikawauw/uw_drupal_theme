@@ -1,9 +1,10 @@
 {# Handles output for all card variants. #}
 {# Related uw_wp_theme file: /inc/shortcodes/class.cards-shortcode.php #}
-{%  if variant and variant !='default' %}
+{%  if variant and variant != 'default' %}
   {% set variant = variant|replace({'__': '-'}) %}
 {% endif %}
 {% set card_class = [
+    variant is null ? 'default',
     variant is same as 'default' ? 'inset',
     variant is same as 'no-image' ? 'no-image',
     variant is same as 'image-top' ? 'image-top',
@@ -18,7 +19,7 @@
   ]
 %}
 {% set text_class = [
-    variant is same as 'inset' ? 'text-center' : 'text-left',
+    variant is same as 'default' ? 'text-center' : 'text-left',
   ]
 %}
 {% set card_color = [
@@ -30,14 +31,14 @@
   ]
 %}
 {% set button_color = [
-    color is same as 'purple' ? 'secondary light-gold',
-    color is same as 'white' ? 'primary purple',
-    (variant is same as 'inset' and color is empty) ? 'purple',
-    (color is same as 'gold' and variant is not same as 'block') ? 'white'
+    color == 'purple' ? 'light__gold',
+    color == 'white' ? 'purple',
+    (variant == 'default' and color is empty) ? 'purple',
+    (color == 'gold' and variant is not same as 'block') ? 'white'
   ]
 %}
 {% set link_class = stretched_link ? 'stretched-link' : '' %}
-
+{{ kint(button_color) }}
 {% if id %}
 {% set card_id = id|lower %}
 {% endif %}
@@ -59,7 +60,7 @@
 {% endif %}
 
 {# We need to generate a random number for the svg id if one of these styles. #}
-{% if varoamt in ['full-width', 'half-block-full', 'half-block-full-width'] %}
+{% if variant in ['full-width', 'half-block-full', 'half-block-full-width'] %}
   {% set random_number = random(1000) %}
 {% endif %}
 
@@ -81,9 +82,10 @@
   {%  if image %}
     <div class="card-image-inset">{{ image|add_class('card-img','card-image-inset') }}</div>
   {% endif %}
-  {{ body }}
+  {{ content }}
   {% if linkurl and linktext %}
-  <p class="button"><a{{ button_attributes.addClass('btn', 'btn-sm', button_color, link_class) }} href="{{ linkurl }}"><span>{{ linktext }}</span></a></p>
+    <p class="button">{{ include('uw_drupal_theme:button', { variant: 'primary', link: linkurl, text: linktext, color: button_color }, with_context = false) }}</p>
+{#  <p class="button"><a{{ button_attributes.addClass('btn', 'btn-sm', button_color, link_class) }} href="{{ linkurl }}"><span>{{ linktext }}</span></a></p>#}
   {% endif %}
   </div>
 </div>
@@ -98,7 +100,7 @@
     {% endif %}
     <div class="udub-slant-divider"><span></span></div>
     <div class="card-content">
-    {{ body }}
+    {{ content }}
     </div>
     {% if linkurl and linktext %}
       <p class="button"><a{{ button_attributes.addClass('btn', 'btn-lg', 'arrow', button_color, link_class) }} href="{{ linkurl }}"><span>{{ linktext }}</span><span class="arrow-box"><span class="arrow"></span></span></a></p>
@@ -113,7 +115,7 @@
     <h{{ heading_level }} class="card-title mb-0">{{ title }}</h{{ heading_level }}>
     <div class="udub-slant-divider"><span></span></div>
     <div class="card-content">
-      {{ body }}
+      {{ content }}
     </div>
   {% if linkurl and linktext %}
     <p class="button"><a{{ button_attributes.addClass('btn', 'btn-lg', 'arrow', button_color) }} href="{{ linkurl }}"><span>{{ linktext }}</span><span class="arrow-box"><span class="arrow"></span></span></a></p>
@@ -127,7 +129,7 @@
     <h{{ heading_level }} class="card-title">{{ title }}</h{{ heading_level }}>
     <div class="card-body">
       <div class="card-content">
-        {{ body }}
+        {{ content }}
       </div>
       {% if linkurl and linktext %}
       <p class="button"><a{{ button_attributes.addClass('btn', 'btn-sm', button_color, link_class) }} href="{{ linkurl }}"><span>{{ linktext }}</span></a></p>
@@ -142,7 +144,7 @@
     <h{{ heading_level }} class="card-title mb-0">{{ title }}</h{{ heading_level }}>
     <div class="udub-slant-divider"><span></span></div>
     <div class="card-content">
-      {{ body }}
+      {{ content }}
     </div>
     {% if linkurl and linktext %}
       <p><a class="link-arrow-box" href="{{ linkurl }}"><span>{{ linktext }}</span><span class="arrow-box"><span class="arrow"></span></span></a></p>
@@ -163,7 +165,7 @@
     {% endif %}
     <div class="udub-slant-divider"><span></span></div>
     <div class="card-content">
-      {{ body }}
+      {{ content }}
     </div>
     {% if linkurl and linktext %}
       <p class="link-with-arrow-box"><a class="link-arrow-box" href="{{ linkurl }}"><span>{{ linktext }}</span><span class="arrow-box"><span class="arrow"></span></span></a></p>
@@ -178,7 +180,7 @@
   <div class="card-body">
     <div class="inner-card-body">
       <h{{ heading_level }} class="card-title">{{ title }}</h{{ heading_level }}>
-      {{ body }}
+      {{ content }}
     {% if linkurl and linktext %}
       <p class="button"><a{{ button_attributes.addClass('btn', 'btn-lg', 'arrow', button_color) }} href="{{ linkurl }}"><span>{{ linktext }}</span><span class="arrow-box"><span class="arrow"></span></span></a></p>
     {% endif %}
@@ -193,7 +195,7 @@
   <div class="card-body">
     <div class="inner-card-body">
       <h{{ heading_level }} class="card-title">{{ title }}</h{{ heading_level }}>
-      {{ body }}
+      {{ content }}
       {% if linkurl and linktext %}
       <p class="button"><a{{ button_attributes.addClass('btn', 'btn-lg', 'arrow', button_color) }} href="{{ linkurl }}"><span>{{ linktext }}</span><span class="arrow-box"><span class="arrow"></span></span></a></p>
       {% endif %}
