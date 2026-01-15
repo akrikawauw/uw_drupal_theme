@@ -32,7 +32,7 @@ props:
     link:
       title: Button link Url
       type: string
-      format: uri
+#      format: uri-reference
     text:
       title: Button link text
       type: string

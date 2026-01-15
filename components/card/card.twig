@@ -3,6 +3,7 @@
 {%  if variant and variant != 'default' %}
   {% set variant = variant|replace({'__': '-'}) %}
 {% endif %}
+
 {% set card_class = [
     variant is null ? 'default',
     variant is same as 'default' ? 'inset',
@@ -38,7 +39,7 @@
   ]
 %}
 {% set link_class = stretched_link ? 'stretched-link' : '' %}
-{{ kint(button_color) }}
+{#{{ kint(heading_level) }}#}
 {% if id %}
 {% set card_id = id|lower %}
 {% endif %}
@@ -46,18 +47,24 @@
 {# Set card width for inline style attribute only for these card styles. #}
 {% set card_width = variant in ['full-width', 'half-block-full', 'half-block-full-width'] ? '100vw' : '100%' %}
 
+
+{#{{ kint(image) }}#}
+{#{{ kint('public:/' ~ file_url(image.0.content.0.0.0['#media'].name.value)) }}#}
+{#{{ kint(image.entity.field_uw_card_image.entity.uri.value) }}#}
 {# Set background image inline style text for large and full-width cards. #}
 {% if variant in ['large', 'full-width', 'half-block-large', 'half-block-full', 'half-block-full-width'] %}
-{#  {% if image.uri is not empty %}#}
-    {% set image_div_style_attributes = { 'background-image:': 'url(' ~ image['#uri'] ~ ')' } %}
+{% if image is not empty %}
+    {% set image_div_style_attributes = { 'background-image:': 'url(' ~ '"/sites/default/files/2026-01' ~ file_url(image.0.content.0.0.0['#media'].name.value) ~ '")' } %}
 {#  {% else %}#}
 {#    {% set image_div_style_attributes = {'background-image:': 'url(' ~ file_url(image.urifileuri)  ~ ')'} %}#}
-{#  {% endif %}#}
+  {% endif %}
 {% set image_div_attributes = create_attribute() %}
   {% for key,value in image_div_style_attributes %}
   {% set image_div_attributes = image_div_attributes.setAttribute('style', {key,value}) %}
   {% endfor %}
 {% endif %}
+
+{#{{ kint(image_div_attributes) }}#}
 
 {# We need to generate a random number for the svg id if one of these styles. #}
 {% if variant in ['full-width', 'half-block-full', 'half-block-full-width'] %}
@@ -66,8 +73,8 @@
 
 {# Read in the alignment for large and full width cards and set up classes for them. #}
 {% set align_class = [
-    (variant in ['large', 'full-width', 'half-block-large', 'half-block-full', 'half-block-full-width'] and align is same as 'left') ? 'img-right',
-    (variant in ['large', 'full-width', 'half-block-large', 'half-block-full', 'half-block-full-width'] and align is same as 'right') ? 'img-left',
+    (variant in ['large', 'full-width', 'half-block-large', 'half-block-full', 'half-block-full-width'] and align is same as 'left') ? 'img-left',
+    (variant in ['large', 'full-width', 'half-block-large', 'half-block-full', 'half-block-full-width'] and align is same as 'right') ? 'img-right',
   ]
 %}
 
@@ -84,8 +91,15 @@
   {% endif %}
   {{ content }}
   {% if linkurl and linktext %}
-    <p class="button">{{ include('uw_drupal_theme:button', { variant: 'primary', link: linkurl, text: linktext, color: button_color }, with_context = false) }}</p>
-{#  <p class="button"><a{{ button_attributes.addClass('btn', 'btn-sm', button_color, link_class) }} href="{{ linkurl }}"><span>{{ linktext }}</span></a></p>#}
+    {{ include('uw_drupal_theme:button', {
+      variant: 'primary',
+      link: linkurl,
+      text: linktext,
+      color: button_color,
+      size: 'small' },
+      with_context = false)
+    }}
+{#  <p class="button"><a{{ button_attributes.addClass('btn', 'btn-sm', button_color, link_class) }} href="{{ linkurl }}"><span>{{ linktext }}</span></a></p>}#}
   {% endif %}
   </div>
 </div>

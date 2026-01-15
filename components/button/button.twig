@@ -1,6 +1,6 @@
 {# Handles output for all button variants. #}
 {# Related uw_wp_theme file: /inc/shortcodes/class.cards-shortcode.php #}
-{{ kint(variant, link, text, color) }}
+{#{{  kint(variant) }}#}
 {% set variant = variant == 'default' ? 'arrow' : variant %}
 {% set color = color == 'light__gold' ? 'light-gold' : color %}
 {%
@@ -20,14 +20,16 @@
     variant == 'icon' ? 'icon ic-' ~ icon_to_display : ''
   ]
 %}
-
-<a{{create_attribute({'href':link}).addClass(link_classes)}}>
-  <span>
-    {{text}}
-  </span>
-  {% if variant not in ['primary', 'secondary'] %}
-    <span class="arrow-box">
-      <span{{create_attribute().addClass(arrow_box_classes)}}></span>
+{{  kint(link_classes) }}
+<p class="button">
+  <a{{create_attribute({'href':link}).addClass(link_classes)}}>
+    <span>
+      {{text}}
     </span>
-  {% endif %}
-</a>
+    {% if variant not in ['primary', 'secondary'] %}
+      <span class="arrow-box">
+        <span{{create_attribute().addClass(arrow_box_classes)}}></span>
+      </span>
+    {% endif %}
+  </a>
+</p>
