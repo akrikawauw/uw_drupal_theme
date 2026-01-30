@@ -5,6 +5,11 @@
 let gulp = require('gulp'),
   sass = require('gulp-sass')(require('sass')),
   sourcemaps = require('gulp-sourcemaps'),
+  inject = require('gulp-inject-string'),
+  concat = require('gulp-concat'),
+  uglify = require('gulp-uglify'),
+  babel = require('gulp-babel'),
+  tap = require('gulp-tap'),
   $ = require('gulp-load-plugins')(),
   cleanCss = require('gulp-clean-css'),
   rename = require('gulp-rename'),
@@ -16,23 +21,46 @@ let gulp = require('gulp'),
 // Establish paths object to reference them below in the compiling functions.
 const paths = {
   scss: {
-    // This is our main entry point; within style.scss we're then referencing the
-    // uw_wp_theme's final bootstrap.css and style.css files.
+    /* This is our main entry point; within style.scss we're then referencing the
+     * uw_wp_theme's style.css, which is manually copied into ./scss/_style.css,
+     * and bootstrap.scss which lives in ./src/wp-theme/css.
+    */
     src: './scss/style.scss',
     dest: './css',
     minified: './css/style.min.css',
     watch: ['./scss/**/*.scss', './scss/**/*.scss'],
   },
   js: {
-    bootstrap: './node_modules/bootstrap/dist/js/bootstrap.min.js',
-    bootstrapmap: './node_modules/bootstrap/dist/js/bootstrap.min.js.map',
-    popper: './node_modules/popper.js/dist/popper.min.js',
-    poppermap: './node_modules/popper.js/dist/popper.min.js.map',
-    theme: './js/misc.js',
-    wpJS: './src/wp-theme/js/*.js',
-    dest2014: './js/2014',
-    destRoot: './js',
-    destLibs: './js/libs',
+    // The sources are unique based on the method in use for copying from uw_wp_theme
+    // and any customization/overrides needed. The customizations/overrides are in ./src/staging/js.
+    src: {
+      theme: './js/global.js',
+      wp2014: './src/wp-theme/js/2014/2014.js',
+      wp2014alert: './src/wp-theme/js/2014/alert.js',
+      wp2014quicklinks: './src/wp-theme/js/2014/quicklinks.js',
+      wp2014search: './src/staging/js/search.js',
+      wp2014searchtoggle: './src/wp-theme/js/2014/searchtoggle.js',
+      searchtoggleonly: './src/staging/js/searchtoggleonly.js',
+      wp2014select: './src/wp-theme/js/2014/select.js',
+      wpShortcodesAccordion: './src/wp-theme/js/shortcodes/accordion.js',
+      wpShortcodesCustomLink: './src/wp-theme/js/shortcodes/custom-link.js',
+      wpShortcodesGallery: './src/wp-theme/js/shortcodes/gallery.js',
+      wpShortcodesModal: './src/wp-theme/js/shortcodes/modal.js',
+      wpShortcodesTabTours: './src/wp-theme/js/shortcodes/tabs-tours.js',
+      classicMenu: './src/wp-theme/js/classic-menu.js',
+      keyboardButton: './src/wp-theme/js/keyboard-button.js',
+      keyboardNavmenu: './src/wp-theme/js/keyboard-navmenu.js',
+      megamenu: './src/wp-theme/js/megamenu.js',
+      // TODO: research sidebar-nav.js and determine if functionality is provided via menu templating in Drupal
+      // sidebarnav: './src/wp-theme/js/sidebarnav.js',
+      skipLinkFocusFix: './src/wp-theme/js/skip-link-focus-fix.js',
+      topLinksToDropdowns: './src/staging/top-links-to-dropdowns.js'
+    },
+    dest: {
+      wp2014: './js/2014',
+      jsRoot: './js',
+      wpShortcodes: './js/components'
+    }
   },
   cleanBuild: {
     css: './css/**.css',
@@ -70,10 +98,74 @@ function minifyCSS() {
 function jsLibs() {
   return gulp
     .src([paths.js.bootstrap, paths.js.bootstrapmap, paths.js.popper])
-    .pipe(gulp.dest(paths.js.destLibs));
+    .pipe(gulp.dest(paths.js.wp2014));
 }
 function js2014() {
-  return gulp.src([paths.js.helpers2014]).pipe(gulp.dest(paths.js.dest2014));
+  return gulp
+    .src([
+      paths.js.src.wp2014,
+      paths.js.src.wp2014alert,
+      paths.js.src.wp2014quicklinks,
+      paths.js.src.wp2014searchtoggle,
+      paths.js.src.wp2014select,
+    ])
+    .pipe(tap((file)=> {
+      file.contents = Buffer.from(_wrapForDrupal(file.contents.toString(), ', Backbone'));
+    }))
+    .pipe(concat('2014bundle.min.js'))
+    .pipe(babel())
+    .pipe(uglify())
+    .pipe(gulp.dest(paths.js.dest.wp2014));
+}
+
+async function jsShortcodes() {
+  const shortcodesFiles = [
+    { file: paths.js.src.wpShortcodesAccordion, wrap: true },
+    { file: paths.js.src.wpShortcodesCustomLink, wrap: false },
+    { file: paths.js.src.wpShortcodesGallery, wrap: false },
+    { file: paths.js.src.wpShortcodesModal, wrap: true },
+    { file: paths.js.src.wpShortcodesTabTours, wrap: true }
+  ];
+  shortcodesFiles.forEach(
+    (shortcodeFile) => {
+      return gulp
+        .src(shortcodeFile.file)
+        .pipe(
+            tap((file) => {
+              if (shortcodeFile.wrap) {
+                file.contents = Buffer.from(_wrapForDrupal(file.contents.toString(), ', drupalSettings'));
+              }
+            })
+        )
+          // tap( (file) => {
+          // file.contents = Buffer.from(_wrapForDrupal(file.contents.toString(), ', drupalSettings'));
+        .pipe(babel())
+        // .pipe(uglify())
+        .pipe(gulp.dest(paths.js.dest.wpShortcodes))
+    }
+  );
+}
+
+function jsSearch() {
+  return gulp
+    .src(paths.js.src.wp2014search)
+    .pipe(tap((file)=> {
+      file.contents = Buffer.from(_wrapForDrupal(file.contents.toString(), ', drupalSettings'));
+    }))
+    .pipe(babel())
+    // .pipe(uglify())
+    .pipe(gulp.dest(paths.js.dest.wp2014))
+}
+
+function jsSearchToggleOnly() {
+  return gulp
+    .src(paths.js.src.searchtoggleonly)
+    .pipe(tap((file)=> {
+      file.contents = Buffer.from(_wrapForDrupal(file.contents.toString(), ''));
+    }))
+    .pipe(babel())
+    .pipe(uglify())
+    .pipe(gulp.dest(paths.js.dest.wp2014))
 }
 function jsHelpers() {
   return gulp
@@ -81,25 +173,23 @@ function jsHelpers() {
     .pipe(gulp.dest(paths.js.destRoot));
 }
 
-// Clean up before a build
-// TODO: assets folder as well; directory '2014' and 'libs' in js folder should be wiped...wasn't sure how to do
-// function clean() {
-//   return del([
-//     paths.cleanBuild.css,
-//     paths.cleanBuild.js,
-//     paths.cleanBuild.jsSrcMaps,
-//     '!./css/wp-fnl-output-bootstrap.css',
-//     '!./js/misc.js',
-//   ]);
-// }
-
 const build = gulp.series(
-  styles
-  // minifyCSS
-  // gulp.parallel(jsLibs, js2014, jsHelpers, serve)
+  styles,
+  gulp.parallel(js2014, jsSearch, jsSearchToggleOnly)
 );
 
+function _wrapForDrupal(incoming, optionsAsString) {
+  const prependString = Buffer.from('(function (Drupal, $' + optionsAsString + ') {', 'utf8');
+  const appendString = Buffer.from('})(Drupal, jQuery' + optionsAsString + ');', 'utf8');
+  const wrappedFile = prependString + incoming + appendString;
+  return wrappedFile;
+}
+
 exports.styles = styles;
-exports.js = gulp.series(jsLibs, js2014, jsHelpers);
+exports.js = gulp.series(js2014, jsSearch, jsSearchToggleOnly, jsShortcodes);
+exports.jsShortcodes = jsShortcodes;
+exports.js2014 = js2014;
+exports.jsSearch = jsSearch;
+exports.jsSearchToggle = jsSearchToggleOnly;
 
 exports.default = build;

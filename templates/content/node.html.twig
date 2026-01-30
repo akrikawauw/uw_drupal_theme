@@ -5,16 +5,9 @@
  *
  * Available variables:
  * - node: The node entity with limited access to object properties and methods.
- *   Only method names starting with "get", "has", or "is" and a few common
- *   methods such as "id", "label", and "bundle" are available. For example:
- *   - node.getCreatedTime() will return the node creation timestamp.
- *   - node.hasField('field_example') returns TRUE if the node bundle includes
- *     field_example. (This does not indicate the presence of a value in this
- *     field.)
- *   - node.isPublished() will return whether the node is published or not.
- *   Calling other methods, such as node.delete(), will result in an exception.
- *   See \Drupal\node\Entity\Node for a full list of public properties and
- *   methods for the node object.
+     Only "getter" methods (method names starting with "get", "has", or "is")
+     and a few common methods such as "id" and "label" are available. Calling
+     other methods (such as node.delete) will result in an exception.
  * - label: (optional) The title of the node.
  * - content: All node items. Use {{ content }} to print them all,
  *   or print a subset such as {{ content.field_example }}. Use
@@ -80,7 +73,7 @@ set classes = [
 ]
 %}
 <article{{attributes.addClass(classes)}}>
-
+  <header>
   {{ title_prefix }}
   {% if label and not page %}
     <h2{{title_attributes}}>
@@ -88,19 +81,18 @@ set classes = [
     </h2>
   {% endif %}
   {{ title_suffix }}
-
   {% if display_submitted %}
-    <footer>
+    <div class="node__meta">
       {{ author_picture }}
-      <div{{author_attributes}}>
-        {% trans %}Submitted by
-        {{ author_name }}
-        on
-        {{ date }}{% endtrans %}
-        {{ metadata }}
-      </div>
-    </footer>
+      {% block submitted %}
+        <em{{ author_attributes }}>
+          {% trans %}Submitted by {{ author_name }} on {{ date }}{% endtrans %}
+        </em>
+      {% endblock %}
+      {{ metadata }}
+    </div>
   {% endif %}
+  </header>
 
   <div{{content_attributes}}>
     {{ content }}
