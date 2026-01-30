@@ -1,6 +1,9 @@
 # ignore node_modules
 node_modules/
 
+# ignore template tests
+templates/_testing/
+
 # Local files not needed
 .DS_store
 d-best-practice-check.txt

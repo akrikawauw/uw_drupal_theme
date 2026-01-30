@@ -49,7 +49,7 @@
 
 
 {#{{ kint(image) }}#}
-{#{{ kint('public:/' ~ file_url(image.0.content.0.0.0['#media'].name.value)) }}#}
+{{ kint('public:/' ~ file_url(image.0.content.0.0.0['#media'].name.value)) }}
 {#{{ kint(image.entity.field_uw_card_image.entity.uri.value) }}#}
 {# Set background image inline style text for large and full-width cards. #}
 {% if variant in ['large', 'full-width', 'half-block-large', 'half-block-full', 'half-block-full-width'] %}
@@ -90,7 +90,8 @@
     <div class="card-image-inset">{{ image|add_class('card-img','card-image-inset') }}</div>
   {% endif %}
   {{ content }}
-  {% if linkurl and linktext %}
+{#  {% if linkurl and linktext %}#}
+    {{ kint(linkurl, linktext) }}
     {{ include('uw_drupal_theme:button', {
       variant: 'primary',
       link: linkurl,
@@ -100,7 +101,7 @@
       with_context = false)
     }}
 {#  <p class="button"><a{{ button_attributes.addClass('btn', 'btn-sm', button_color, link_class) }} href="{{ linkurl }}"><span>{{ linktext }}</span></a></p>}#}
-  {% endif %}
+{#  {% endif %}#}
   </div>
 </div>
 
