@@ -4,10 +4,13 @@ description: 'A Bootstrap based theme. Leverages CSS, JS and HTML markup from th
 version: 0.0.5
 core: 8.x
 core_version_requirement: ^8 || ^9 || ^10
-base theme: stable9
+base theme: bootstrap_barrio
 
 libraries:
   - uw_drupal_theme/global-styling
+
+libraries-override:
+  bootstrap_barrio/global-styling: false
 
 regions:
   search: "Search"
