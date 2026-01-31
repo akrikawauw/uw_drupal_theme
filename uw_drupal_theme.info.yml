@@ -12,12 +12,6 @@ libraries:
   - uw_drupal_theme/bootstrap
   - uw_drupal_theme/global-styling
 
-libraries-override:
-  bootstrap/global-styling:
-    css:
-      component:
-        css/components/site-footer.css: {}
-
 regions:
   search: "Search"
   thinstrip: "Thinstrip"
